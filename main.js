@@ -8,12 +8,13 @@ const scene = new THREE.Scene();
 
 // Set up the camera
 const camera = new THREE.PerspectiveCamera(
-  75,
+  50,
   window.innerWidth / window.innerHeight,
   0.1,
   1000
 );
-camera.position.z = 5;
+camera.position.z = 30;
+camera.position.y = -90;
 
 // Set up the renderer
 const renderer = new THREE.WebGLRenderer({ alpha: true });

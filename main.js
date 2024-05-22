@@ -1,5 +1,7 @@
 // Importing the necessary modules from Three.js
 import * as THREE from "three";
+import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
+import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 
 // Set up the scene
 const scene = new THREE.Scene();
@@ -14,27 +16,43 @@ const camera = new THREE.PerspectiveCamera(
 camera.position.z = 5;
 
 // Set up the renderer
-const renderer = new THREE.WebGLRenderer();
+const renderer = new THREE.WebGLRenderer({ alpha: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
-// Create a geometry and a material, then combine them into a mesh
-const geometry = new THREE.BoxGeometry();
-const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
-const cube = new THREE.Mesh(geometry, material);
+// Add orbit controls
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.update();
 
-// Add the cube to the scene
-scene.add(cube);
+// Add ambient light
+const ambientLight = new THREE.AmbientLight(0x404040); // soft white light
+scene.add(ambientLight);
+
+// Add directional light
+const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+directionalLight.position.set(5, 5, 5).normalize();
+scene.add(directionalLight);
+
+// Load the GLTF model
+const loader = new GLTFLoader();
+loader.load(
+  "bike.gltf",
+  function (gltf) {
+    scene.add(gltf.scene);
+    console.log("Model loaded");
+  },
+  function (xhr) {
+    console.log((xhr.loaded / xhr.total) * 100 + "% loaded");
+  },
+  function (error) {
+    console.log("An error happened", error);
+  }
+);
 
 // Animation loop
 function animate() {
   requestAnimationFrame(animate);
-
-  // Rotate the cube for some basic animation
-  cube.rotation.x += 0.01;
-  cube.rotation.y += 0.01;
-
-  // Render the scene from the perspective of the camera
+  controls.update();
   renderer.render(scene, camera);
 }
 

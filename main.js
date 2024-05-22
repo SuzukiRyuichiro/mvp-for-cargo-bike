@@ -28,10 +28,10 @@ controls.update();
 const ambientLight = new THREE.AmbientLight(0x404040); // soft white light
 scene.add(ambientLight);
 
-// Add directional light
+// Create a directional light and attach it to the camera
 const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-directionalLight.position.set(5, 5, 5).normalize();
-scene.add(directionalLight);
+camera.add(directionalLight);
+scene.add(camera); // Add the camera (with the light) to the scene
 
 // Load the GLTF model
 const loader = new GLTFLoader();
